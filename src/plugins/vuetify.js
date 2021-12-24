@@ -10,7 +10,7 @@ const opts = {
     iconfont:['mdi']
   },
   // rtl: true,
-  theme: { dark: true },
+  theme: { dark: false },
 };
 
 export default new Vuetify(opts);

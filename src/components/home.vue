@@ -26,7 +26,7 @@
             <template v-slot:activator>
               <v-list-item-title>{{menu.title}}</v-list-item-title>
             </template>
-            <v-list-item v-for="(child,i) in menu.children" :key="i" :to="child.url">
+            <v-list-item v-for="(child,i) in menu.children" :key="i" :to="child.url" link>
               <v-list-item-icon>
                 <v-icon v-text="child.icon"></v-icon>
               </v-list-item-icon>

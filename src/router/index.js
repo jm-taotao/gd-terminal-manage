@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import index from '@/components/index'
+import dashboard from '@/components/dashboard'
 import home from '@/components/home'
 import user from '@/components/system/user'
 import menu from '@/components/system/menu'
@@ -20,6 +21,11 @@ export default new Router({
       name: 'home',
       component: home,
       children:[
+        {
+          path: '/dashboard',
+          name: 'dashboard',
+          component: dashboard
+        },
         {
           path: '/system/user',
           name: 'user',

@@ -6,7 +6,7 @@ import { Toast } from 'vant'
 
 
 if (process.env.NODE_ENV == 'development'){
-  axios.defaults.baseURL = 'localhost:8080';
+  axios.defaults.baseURL = 'http://localhost:10000';
 }
 if (process.env.NODE_ENV == 'production'){
   axios.defaults.baseURL = 'https://www.jsjz.top';

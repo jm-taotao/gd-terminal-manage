@@ -16,7 +16,7 @@
           <v-text-field v-model="form.mobile" label="手机号" placeholder="手机号" outlined></v-text-field>
         </v-col>
         <v-col lg="2" md="2" sm="2">
-          <v-btn :text="true" outlined large class="success"><v-icon left>mdi-card-search-outline</v-icon>查询</v-btn>
+          <v-btn :text="true" large class="success"><v-icon left>mdi-card-search-outline</v-icon>查询</v-btn>
         </v-col>
       </v-row>
     </form>
