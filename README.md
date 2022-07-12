@@ -1,4 +1,4 @@
-# vuedemo
+# gd_terminal_vue
 
 ## Project setup
 ```
