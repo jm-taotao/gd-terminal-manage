@@ -1,4 +1,4 @@
-# gd_terminal_vue
+# gd-terminal-vue
 
 ## Project setup
 ```
