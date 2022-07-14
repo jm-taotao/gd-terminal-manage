@@ -11,6 +11,13 @@ const HttpRequestAPI = {
 'terminal_userManage_update':'/user/update',
 'terminal_userManage_del':'/user/del',
 
+//系统管理->用户管理
+'terminal_menuManage':'/menu/tree',
+'terminal_menuManage_info':'/menu/info',
+'terminal_menuManage_add':'/menu/add',
+'terminal_menuManage_update':'/menu/update',
+'terminal_menuManage_del':'/menu/del',
+
 //系统管理->系统里表
 'terminal_systemManage':'/system/list',
 'terminal_systemManage_info':'/system/info',

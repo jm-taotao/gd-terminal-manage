@@ -4,7 +4,8 @@ import router from "@/router";
 import store from "@/store";
 import {ElMessage} from "element-plus";
 
-axios.defaults.baseURL = 'http://www.jsjz.top:8090';
+// axios.defaults.baseURL = 'http://www.jsjz.top:8090';
+axios.defaults.baseURL = 'http://localhost:8090';
 // axios.defaults.headers.common['Authorization'] = AUTH_TOKEN;
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
 
