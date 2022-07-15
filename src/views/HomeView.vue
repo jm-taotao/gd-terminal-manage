@@ -13,27 +13,33 @@
         >
 
           <el-menu-item style="justify-content: center;height: 60px;font-size: 18px">
-<!--            <img src="../common/images/terminal.png" width="30" height="30">-->
-            <el-icon><HomeFilled /></el-icon>
+            <img src="../common/images/terminal.png" width="30" height="30">
+<!--            <el-icon><HomeFilled /></el-icon>-->
             <span>管理平台</span>
           </el-menu-item>
           <template v-for="(menu,i) in menuList"
                     v-bind:key="menu.id">
             <el-sub-menu v-if="menu.children" :index="i.toString()">
               <template #title>
-                <Icon :iconClass="menu.icon"></Icon>
+                <el-icon>
+                  <component :is="menu.icon"/>
+                </el-icon>
                 <span>{{ menu.name }}</span>
               </template>
               <el-menu-item-group>
                 <el-menu-item v-for="(child,ci) in menu.children" v-bind:key="child.id"
                               :index="i.toString()+'-'+ci.toString()" :route="child.url">
-                  <Icon :iconClass="menu.icon"></Icon>
+                  <el-icon>
+                    <component :is="child.icon"/>
+                  </el-icon>
                   <span>{{ child.name }}</span>
                 </el-menu-item>
               </el-menu-item-group>
             </el-sub-menu>
             <el-menu-item v-else :index="i.toString()" :route="menu.url" v-bind:aa="menu.url">
-              <Icon :iconClass="menu.icon"></Icon>
+              <el-icon>
+                <component :is="menu.icon"/>
+              </el-icon>
               <span>{{ menu.name }}</span>
             </el-menu-item>
           </template>
@@ -118,11 +124,7 @@
 </template>
 
 <script>
-import router from "@/router";
-import {ElMessage} from "element-plus";
 import Breadcrumb from "@/components/Breadcrumb";
-import HttpRequestAPI from "../api/HttpRequestApi";
-// import Icon from '@/components/icon/icon.vue'
 
 export default {
   name: 'HomeView',
@@ -143,7 +145,7 @@ export default {
     if (item != null && item != undefined && item.length > 0) {
       return;
     }
-    this.axios.get(HttpRequestAPI.terminal_menuTree)
+    this.axios.post(this.HttpRequestApi.terminal_menuTree)
         .then((response) => {
           if (response.data.code == '100000') {
             this.menuList=response.data.data;
@@ -151,7 +153,7 @@ export default {
           }
         })
         .catch(error => {
-          ElMessage({
+          this.$message({
             message: error,
             type: 'success',
             center: true,
@@ -172,10 +174,10 @@ export default {
       }
     },
     logOut() {
-      this.axios.get(HttpRequestAPI.terminal_logout).then((response) => {
+      this.axios.post(this.HttpRequestApi.terminal_logout).then((response) => {
         if (response.data.code == '100000') {
           this.$store.commit('initLoginUser', null);
-          router.push(HttpRequestAPI.terminal_login);
+          this.router.push(this.HttpRequestApi.terminal_login);
         }
       }).catch(error => {
         console.log(error)

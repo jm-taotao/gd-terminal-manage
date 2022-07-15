@@ -17,11 +17,6 @@
 </template>
 
 <script>
-import {ElMessage} from "element-plus";
-import router from "@/router";
-import axios from "axios";
-import qs from "qs";
-import HttpRequestAPI from "@/api/HttpRequestApi";
 export default {
   name: "LogIn",
   data(){
@@ -45,23 +40,23 @@ export default {
       }
       this.$refs.form.validate((valid) => {
         if (valid) {
-          axios({
+          this.$Axios({
                 method: 'post',
-                url: HttpRequestAPI.terminal_login,
-                data: qs.stringify(user)
+                url: this.HttpRequestApi.terminal_login,
+                data: this.$Qs.stringify(user)
               })
               .then(resp=>{
                 if (resp.data.code=='100000'){
                   this.$store.commit('initLoginUser',resp.data.data)
-                  ElMessage({
+                  this.$message({
                     message: '登录成功',
                     type: 'success',
                     center:true,
                     duration:1500
                   })
-                  router.push(HttpRequestAPI.terminal_index)
+                  this.router.push(this.HttpRequestApi.terminal_index)
                 }else {
-                  ElMessage({
+                  this.$message({
                     message: resp.data.msg,
                     type: 'warning',
                     center:true,
@@ -71,7 +66,7 @@ export default {
               })
               .catch(error=>{
                 console.log(error)
-                ElMessage({
+                this.$message({
                   message: '登录失败',
                   type: 'error',
                   center:true,

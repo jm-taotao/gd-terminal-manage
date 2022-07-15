@@ -40,6 +40,7 @@
       </el-form-item>
     </el-form>
   <el-table :data="tableData" :row-class-name="rowClass" :table-layout="'auto'" height="1000px">
+<!--    <el-table-column prop="" label="" type="selection"></el-table-column>-->
     <el-table-column prop="id" label="用户ID"></el-table-column>
     <el-table-column prop="loginName" label="用户名"></el-table-column>
     <el-table-column prop="isDeleted" label="状态">
@@ -120,8 +121,6 @@
 </template>
 
 <script >
-import Qs from "qs";
-import HttpRequestAPI from "@/api/HttpRequestApi";
 import { markRaw } from 'vue';
 import { Delete } from '@element-plus/icons-vue';
 export default {
@@ -168,7 +167,7 @@ export default {
         page:this.currentPage,
         pageSize:10
       }
-      this.axios.post(HttpRequestAPI.terminal_userManage,Qs.stringify(page))
+      this.axios.post(this.HttpRequestApi.terminal_userManage,this.$Qs.stringify(page))
           .then(resp=>{
             if (resp.data.success){
               this.tableData = resp.data.data.list
@@ -190,7 +189,7 @@ export default {
         page:page+1,
         pageSize:10
       }
-      this.axios.post(HttpRequestAPI.terminal_userManage,Qs.stringify(pager))
+      this.axios.post(this.HttpRequestApi.terminal_userManage,this.$Qs.stringify(pager))
           .then(resp=>{
             if (resp.data.success){
               this.tableData = resp.data.data.list
@@ -205,7 +204,7 @@ export default {
         page:page-1,
         pageSize:10
       }
-      this.axios.post(HttpRequestAPI.terminal_userManage,Qs.stringify(pager))
+      this.axios.post(this.HttpRequestApi.terminal_userManage,this.$Qs.stringify(pager))
           .then(resp=>{
             if (resp.data.success){
               this.tableData = resp.data.data.list
@@ -220,7 +219,7 @@ export default {
         page:this.currentPage,
         pageSize:newSize
       }
-      this.axios.post(HttpRequestAPI.terminal_userManage,Qs.stringify(pager))
+      this.axios.post(this.HttpRequestApi.terminal_userManage,this.$Qs.stringify(pager))
           .then(resp=>{
             if (resp.data.success){
               this.tableData = resp.data.data.list
@@ -235,7 +234,7 @@ export default {
         page:newPage,
         pageSize:this.pageSize
       }
-      this.axios.post(HttpRequestAPI.terminal_userManage,Qs.stringify(pager))
+      this.axios.post(this.HttpRequestApi.terminal_userManage,this.$Qs.stringify(pager))
           .then(resp=>{
             if (resp.data.success){
               this.tableData = resp.data.data.list
@@ -253,7 +252,7 @@ export default {
         start:this.form.start,
         end:this.form.end,
       }
-      this.axios.post(HttpRequestAPI.terminal_userManage,Qs.stringify(pager))
+      this.axios.post(this.HttpRequestApi.terminal_userManage,this.$Qs.stringify(pager))
           .then(resp=>{
             if (resp.data.success){
               this.tableData = resp.data.data.list
@@ -280,7 +279,7 @@ export default {
           confirmButtonText:'确认',
           draggable:true,
       }).then(()=>{
-        this.axios.post(HttpRequestAPI.terminal_userManage_del,Qs.stringify({userId:row.id}))
+        this.axios.post(this.HttpRequestApi.terminal_userManage_del,this.$Qs.stringify({userId:row.id}))
             .then(resp=>{
               if (resp.data.success){
                 this.$message({
@@ -312,6 +311,9 @@ export default {
       })
       console.log(index,row)
     },
+    onSelect(selection, row){
+      console.log(selection,row)
+    },
     validate:function (form) {
       if (form.loginName==''){
         return false;
@@ -331,7 +333,7 @@ export default {
             loginName:form.loginName,
             password:form.password
           }
-          this.axios.post(HttpRequestAPI.terminal_userManage_add,Qs.stringify(adminUser))
+          this.axios.post(this.HttpRequestApi.terminal_userManage_add,this.$Qs.stringify(adminUser))
               .then(resp=>{
                 if (resp.data.success){
                   this.$message({
@@ -369,7 +371,7 @@ export default {
             id:form.id,
             loginName:form.loginName
           }
-          this.axios.post(HttpRequestAPI.terminal_userManage_update,Qs.stringify(adminUser))
+          this.axios.post(this.HttpRequestApi.terminal_userManage_update,this.$Qs.stringify(adminUser))
               .then(resp=>{
                 if (resp.data.success){
                   this.$message({
