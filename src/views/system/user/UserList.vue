@@ -14,6 +14,12 @@
             placeholder="请输入用户名"
         />
       </el-form-item>
+      <el-form-item label="状态：" prop="isDeleted">
+        <el-select v-model="form.isDeleted" class="m-2" placeholder="请选择状态">
+          <el-option value="Y"><el-tag :type="'danger'">已删除</el-tag><span>&nbsp;Y</span></el-option>
+          <el-option value="N"><el-tag :type="'success'">未删除</el-tag><span>&nbsp;N</span></el-option>
+        </el-select>
+      </el-form-item>
       <el-form-item label="创建时间：" prop="start">
         <el-date-picker
             v-model="form.start"
@@ -34,9 +40,9 @@
         />
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" bg @click="search"><el-icon><Search/></el-icon><span>查询</span></el-button>
+        <el-button type="primary" plain @click="search"><el-icon><Search/></el-icon><span>查询</span></el-button>
         <el-button type="primary" plain @click="formReset"><el-icon><Refresh /></el-icon><span>重置</span></el-button>
-        <el-button type="primary" bg @click="addDialog = true"><el-icon><Plus /></el-icon><span>新增</span></el-button>
+        <el-button type="primary" plain @click="addDialog = true"><el-icon><Plus /></el-icon><span>新增</span></el-button>
       </el-form-item>
     </el-form>
   <el-table :data="tableData" :row-class-name="rowClass" :table-layout="'auto'" height="1000px">
@@ -61,8 +67,9 @@
     <el-table-column prop="updateTimeStr" label="更新时间"></el-table-column>
     <el-table-column label="操作">
       <template #default="scope">
-        <el-button size="default" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-        <el-button size="default" type="danger" @click="handleDelete(scope.$index, scope.row)" >删除</el-button>
+        <el-button size="default" plain type="info" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+        <el-button size="default" plain type="danger" @click="handleDelete(scope.$index, scope.row)" v-if="scope.row.isDeleted==='N'" >删除</el-button>
+        <el-button size="default" plain type="success" @click="handleOpen(scope.$index, scope.row)" v-else >启动</el-button>
       </template>
     </el-table-column>
   </el-table>
@@ -85,7 +92,7 @@
     <el-row>
       <el-col :span="12" :offset="4">
         <el-form ref="addForm" :model="addForm" :rules="rules" @validate="validate(addForm)" status-icon label-width="100px">
-          <el-form-item label="用户名" prop="account">
+          <el-form-item label="用户名" prop="loginName">
             <el-input v-model="addForm.loginName" placeholder="请输入用户名" ></el-input>
           </el-form-item>
           <el-form-item label="密码" prop="password">
@@ -107,7 +114,7 @@
 
   <el-dialog v-model="editDialog" title="编辑信息" width="30%" center :destroy-on-close="true">
     <el-form ref="editForm" :model="editForm" :rules="rules" @validate="validate(editForm)" status-icon label-width="100px">
-      <el-form-item label="用户名" prop="account">
+      <el-form-item label="用户名" prop="loginName">
         <el-input v-model="editForm.loginName" placeholder="请输入用户名" ></el-input>
       </el-form-item>
     </el-form>
@@ -134,6 +141,7 @@ export default {
       total:0,
       form:{
         loginName:'',
+        isDeleted:'',
         start:'',
         end:'',
       },
@@ -249,6 +257,7 @@ export default {
         page:1,
         pageSize:this.pageSize,
         loginName:this.form.loginName,
+        isDeleted:this.form.isDeleted,
         start:this.form.start,
         end:this.form.end,
       }
@@ -279,7 +288,7 @@ export default {
           confirmButtonText:'确认',
           draggable:true,
       }).then(()=>{
-        this.axios.post(this.HttpRequestApi.terminal_userManage_del,this.$Qs.stringify({userId:row.id}))
+        this.axios.post(this.HttpRequestApi.terminal_userManage_del,this.$Qs.stringify({id:row.id}))
             .then(resp=>{
               if (resp.data.success){
                 this.$message({
@@ -310,9 +319,6 @@ export default {
         //todo
       })
       console.log(index,row)
-    },
-    onSelect(selection, row){
-      console.log(selection,row)
     },
     validate:function (form) {
       if (form.loginName==''){
@@ -404,6 +410,52 @@ export default {
     },
     formReset(){
       this.$refs.form.resetFields()
+    },
+    handleOpen(index,row){
+      this.$messageBox.confirm(
+        '启用用户：'+row.loginName,
+        '确认启用吗?',{
+          type:'warning',
+          icon:markRaw(Delete),
+          center:true,
+          cancelButtonText:'取消',
+          confirmButtonText:'确认',
+          draggable:true,
+        }).then(()=>{
+          const user = {
+            id:row.id,
+            isDeleted:'N'
+          }
+        this.axios.post(this.HttpRequestApi.terminal_userManage_update,this.$Qs.stringify(user))
+            .then(resp=>{
+              if (resp.data.success){
+                this.$message({
+                  message: '启用成功',
+                  type: 'success',
+                  center:true,
+                  duration:1500
+                })
+                this.search();
+              } else {
+                this.$message({
+                  message: '启用失败，请重试',
+                  type: 'error',
+                  center:true,
+                  duration:1500
+                })
+              }
+            }).catch(error=>{
+          this.$message({
+            message: '启用失败，请重试',
+            type: 'error',
+            center:true,
+            duration:1500
+          })
+          console.log(error)
+        })
+      }).catch(()=>{
+        //todo
+      })
     }
   },
 }

@@ -47,14 +47,15 @@ export default {
               })
               .then(resp=>{
                 if (resp.data.code=='100000'){
-                  this.$store.commit('initLoginUser',resp.data.data)
+                  this.$store.commit('initToken',resp.data.data.token)
+                  this.$store.commit('initLoginUser',resp.data.data.user)
                   this.$message({
                     message: '登录成功',
                     type: 'success',
                     center:true,
                     duration:1500
                   })
-                  this.router.push(this.HttpRequestApi.terminal_index)
+                  this.$router.push(this.HttpRequestApi.terminal_index)
                 }else {
                   this.$message({
                     message: resp.data.msg,

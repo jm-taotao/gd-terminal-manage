@@ -15,16 +15,15 @@
     </el-form-item>
     <el-form-item label="状态：" prop="isDeleted">
       <el-select v-model="form.isDeleted" class="m-2" placeholder="请选择状态">
-        <el-option value="全部"><el-tag>全部</el-tag></el-option>
         <el-option value="Y"><el-tag :type="'danger'">已删除</el-tag><span>&nbsp;Y</span></el-option>
         <el-option value="N"><el-tag :type="'success'">未删除</el-tag><span>&nbsp;N</span></el-option>
       </el-select>
     </el-form-item>
     <el-form-item>
-      <el-button type="primary" bg @click="search"><el-icon><Search /></el-icon><span>查询</span></el-button>
+      <el-button type="primary" plain @click="search"><el-icon><Search /></el-icon><span>查询</span></el-button>
       <el-button type="primary" plain @click="formReset"><el-icon><Refresh /></el-icon><span>重置</span></el-button>
-      <el-button type="primary" bg @click="addGparent"><el-icon><Plus /></el-icon><span>新增</span></el-button>
-      <el-button type="primary" bg @click="handleExpandAll(defaultExpandAll)" ><el-icon><Switch /></el-icon><span>展开/合并</span></el-button>
+      <el-button type="primary" plain @click="addGparent"><el-icon><Plus /></el-icon><span>新增</span></el-button>
+      <el-button type="primary" plain @click="handleExpandAll(defaultExpandAll)" ><el-icon><Switch /></el-icon><span>展开/合并</span></el-button>
     </el-form-item>
   </el-form>
   <el-table :data="tableData"
@@ -64,9 +63,10 @@
     <el-table-column prop="updateTimeStr" label="更新时间"></el-table-column>
     <el-table-column label="操作">
       <template #default="scope">
-        <el-button type="primary" bg @click="handleAdd(scope.$index, scope.row)"><el-icon><Plus /></el-icon><span>新增子菜单</span></el-button>
-        <el-button size="default" v-if="scope.row.level<3" @click="handleEdit(scope.$index, scope.row)"><el-icon><Edit /></el-icon><span>编辑</span></el-button>
-        <el-button size="default" type="danger" @click="handleDelete(scope.$index, scope.row)" ><el-icon><Delete /></el-icon><span>删除</span></el-button>
+        <el-button size="default" plain type="primary" @click="handleAdd(scope.$index, scope.row)"><el-icon><Plus /></el-icon><span>新增子菜单</span></el-button>
+        <el-button size="default" plain type="info" @click="handleEdit(scope.$index, scope.row)" v-if="scope.row.level<3" ><el-icon><Edit /></el-icon><span>编辑</span></el-button>
+        <el-button size="default" plain type="danger" @click="handleDelete(scope.$index, scope.row)" v-if="scope.row.isDeleted==='N'" ><el-icon><Delete /></el-icon><span>删除</span></el-button>
+        <el-button size="default" plain type="success" @click="handleEdit(scope.$index, scope.row)" v-else ><el-icon><Open /></el-icon><span>启用</span></el-button>
       </template>
     </el-table-column>
   </el-table>
@@ -304,7 +304,7 @@ export default {
             confirmButtonText:'确认',
             draggable:true,
           }).then(()=>{
-        this.axios.post(this.HttpRequestApi.terminal_menuManage_del,this.$Qs.stringify({menuId:row.id}))
+        this.axios.post(this.HttpRequestApi.terminal_menuManage_del,this.$Qs.stringify({id:row.id}))
             .then(resp=>{
               if (resp.data.success){
                 this.$message({

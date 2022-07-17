@@ -71,7 +71,7 @@
                     <el-icon>
                       <UserFilled/>
                     </el-icon>
-                    <span>{{ loginUser.loginName }}</span>
+                    <span v-if="loginUser.loginName">{{ loginUser.loginName }}</span>
                   </el-button>
                 </template>
                 <el-row>
@@ -153,12 +153,7 @@ export default {
           }
         })
         .catch(error => {
-          this.$message({
-            message: error,
-            type: 'success',
-            center: true,
-            duration: 1500
-          })
+          console.log(error)
         })
   },
   methods: {
@@ -176,8 +171,8 @@ export default {
     logOut() {
       this.axios.post(this.HttpRequestApi.terminal_logout).then((response) => {
         if (response.data.code == '100000') {
-          this.$store.commit('initLoginUser', null);
-          this.router.push(this.HttpRequestApi.terminal_login);
+          this.$store.commit('initToken', null);
+          this.$router.push(this.HttpRequestApi.terminal_login);
         }
       }).catch(error => {
         console.log(error)
