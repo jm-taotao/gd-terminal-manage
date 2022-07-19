@@ -1,17 +1,17 @@
 <template>
   <el-row style="display: flex;align-items: center;">
-    <el-icon :size="20" ><Edit/></el-icon><span>角色管理</span>
+    <el-icon :size="20" ><Edit/></el-icon><span>商品管理</span>
   </el-row>
   <el-row>
     <span style="height: 1px;width: 100%;margin:20px 0;background-color: #ffffff"></span>
   </el-row>
   <!--  <el-row>-->
   <el-form :model="form" ref="form" :inline="true">
-    <el-form-item label="角色名：" prop="name">
+    <el-form-item label="商品名称：" prop="name">
       <el-input
           :maxlength="20"
           v-model="form.name"
-          placeholder="请输入角色名"
+          placeholder="请输入商品名称"
       />
     </el-form-item>
     <el-form-item label="状态：" prop="isDeleted">
@@ -40,15 +40,20 @@
       />
     </el-form-item>
     <el-form-item>
-      <el-button type="primary" plain @click="search"><el-icon><Search/></el-icon><span>查询</span></el-button>
-      <el-button type="primary" plain @click="formReset"><el-icon><Refresh /></el-icon><span>重置</span></el-button>
-      <el-button type="primary" plain @click="addDialog = true"><el-icon><Plus /></el-icon><span>新增</span></el-button>
+      <el-button type="primary" plain @click="search" ><el-icon><Search/></el-icon><span>查询</span></el-button>
+      <el-button type="primary" plain @click="formReset" ><el-icon><Refresh /></el-icon><span>重置</span></el-button>
+      <el-button type="primary" plain @click="addDialog = true" ><el-icon><Plus /></el-icon><span>新增</span></el-button>
     </el-form-item>
   </el-form>
   <el-table :data="tableData" :row-class-name="rowClass" :table-layout="'auto'" height="1000px">
-<!--    <el-table-column prop="" label="" type="selection"></el-table-column>-->
-    <el-table-column prop="id" label="角色ID"></el-table-column>
-    <el-table-column prop="name" label="角色名"></el-table-column>
+    <!--    <el-table-column prop="" label="" type="selection"></el-table-column>-->
+    <el-table-column prop="id" label="用户ID"></el-table-column>
+    <el-table-column prop="name" label="商品名称"></el-table-column>
+    <el-table-column prop="barCode" label="商品条码"></el-table-column>
+    <el-table-column prop="spec" label="商品规格"></el-table-column>
+    <el-table-column prop="unit" label="商品单位"></el-table-column>
+    <el-table-column prop="colSpan" label="商品占位"></el-table-column>
+    <el-table-column prop="minImageUrl" label="商品小图"></el-table-column>
     <el-table-column prop="isDeleted" label="状态">
       <template #header>
         <el-tooltip
@@ -60,17 +65,16 @@
         </el-tooltip>
       </template>
       <template #default="scope">
-        <el-tag :type="scope.row.isDeleted === 'N' ? 'success' : 'danger'">{{ scope.row.isDeleted }}</el-tag>
+        <el-tag :type="scope.row.isDeleted === 'N' ? 'success' : 'error'">{{ scope.row.isDeleted }}</el-tag>
       </template>
     </el-table-column>
     <el-table-column prop="createTimeStr" label="创建时间"></el-table-column>
     <el-table-column prop="updateTimeStr" label="更新时间"></el-table-column>
     <el-table-column label="操作">
       <template #default="scope">
-        <el-button size="default" plain type="info" @click="handlePower(scope.$index, scope.row)"><el-icon><Edit /></el-icon><span>权限</span></el-button>
-        <el-button size="default" plain type="info" @click="handleEdit(scope.$index, scope.row)"><el-icon><Edit /></el-icon><span>编辑</span></el-button>
-        <el-button size="default" plain type="success" @click="handleOpen(scope.$index, scope.row)" v-if="scope.row.isDeleted==='Y'"><el-icon><Open /></el-icon><span>启用</span></el-button>
-        <el-button size="default" plain type="danger" @click="handleDelete(scope.$index, scope.row)" v-else><el-icon><Delete /></el-icon><span>删除</span></el-button>
+        <el-button size="default" plain type="info" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+        <el-button size="default" plain type="danger" @click="handleDelete(scope.$index, scope.row)" v-if="scope.row.isDeleted==='N'" >删除</el-button>
+        <el-button size="default" plain type="success" @click="handleOpen(scope.$index, scope.row)" v-else >启动</el-button>
       </template>
     </el-table-column>
   </el-table>
@@ -89,59 +93,54 @@
       v-bind:dataSize="tableData.length"
       :style="paginationStyle"/>
   <!--  新增 -->
-  <el-dialog v-model="addDialog" title="新增信息" width="30%" center :destroy-on-close="true">
-    <el-row>
-      <el-col :span="12" :offset="4">
-        <el-form ref="addForm" :model="addForm" :rules="rules" @validate="validate(addForm)" status-icon label-width="100px">
-          <el-form-item label="角色名" prop="name">
-            <el-input v-model="addForm.name" placeholder="请输入角色名" ></el-input>
+  <el-dialog v-model="addDialog" title="新增信息" width="30%" center :destroy-on-close="true" @close="closeDiaLog">
+        <el-form :model="addForm" ref="addForm" :rules="rules" @validate="validate(addForm)" label-width="100px" :inline="true">
+          <el-form-item label="商品名称" prop="name">
+            <el-input type="text" v-model="addForm.name" placeholder="请输入商品名称" />
+          </el-form-item>
+          <el-form-item label="商品条码" prop="barCode">
+            <el-input type="text" v-model="addForm.barCode" placeholder="请输入商品类型"/>
+          </el-form-item>
+          <el-form-item label="商品类型" prop="typeId">
+            <el-input type="text" v-model="addForm.typeId" placeholder="请输入商品类型"/>
+          </el-form-item>
+          <el-form-item label="商品规格" prop="spec">
+            <el-input type="text" v-model="addForm.spec" placeholder="请输入商品规格"/>
+          </el-form-item>
+          <el-form-item label="商品单位" prop="unit">
+            <el-input type="text" v-model="addForm.unit" placeholder="请输入商品单位"/>
+          </el-form-item>
+          <el-form-item label="商品描述" prop="description">
+            <el-input type="textarea" v-model="addForm.description" placeholder="请输入商品类型"/>
+          </el-form-item>
+          <el-form-item label="商品占位" prop="colSpan">
+            <el-input type="number" v-model="addForm.colSpan" placeholder="商品占位" min="1"/>
+          </el-form-item>
+          <el-form-item label="商品小图" prop="minImageUrl">
+            <el-input type="type" v-model="addForm.minImageUrl" placeholder="请上传商品小图"/>
+          </el-form-item>
+          <el-form-item label="商品原图" prop="normalImageUrl">
+            <el-input type="type" v-model="addForm.normalImageUrl" placeholder="请上传商品原图"/>
           </el-form-item>
         </el-form>
-      </el-col>
-    </el-row>
     <template #footer>
       <span class="dialog-footer">
         <el-button @click="addDialog = false">取消</el-button>
-        <el-button type="primary" @click="addRole(this.addForm)">保存</el-button>
+        <el-button type="primary" @click="addProduct(this.addForm)">保存</el-button>
       </span>
     </template>
   </el-dialog>
 
   <el-dialog v-model="editDialog" title="编辑信息" width="30%" center :destroy-on-close="true">
     <el-form ref="editForm" :model="editForm" :rules="rules" @validate="validate(editForm)" status-icon label-width="100px">
-      <el-form-item label="角色名" prop="name">
-        <el-input v-model="editForm.name" placeholder="请输入角色名" ></el-input>
+      <el-form-item label="商品名称" prop="name">
+        <el-input v-model="editForm.name" placeholder="请输入商品名称" />
       </el-form-item>
     </el-form>
     <template #footer>
       <span class="dialog-footer">
         <el-button @click="editDialog = false">取消</el-button>
-        <el-button type="primary" @click="editRole(this.editForm)">保存</el-button>
-      </span>
-    </template>
-  </el-dialog>
-
-
-  <el-dialog v-model="powerDialog"
-             title="权限管理"
-             width="30%"
-             center
-             :destroy-on-close="true"
-             @close="powerDialogClose"
-  >
-    <el-tree
-        ref="tree"
-        :data="menuTree"
-        show-checkbox
-        node-key="id"
-        :default-checked-keys="roleMenuIds"
-        highlight-current
-        :check-on-click-node="true"
-    />
-    <template #footer>
-      <span class="dialog-footer">
-        <el-button @click="powerDialog = false">取消</el-button>
-        <el-button type="primary" @click="saveMenu">保存</el-button>
+        <el-button type="primary" @click="editProduct(this.editForm)">保存</el-button>
       </span>
     </template>
   </el-dialog>
@@ -151,7 +150,7 @@
 import { markRaw } from 'vue';
 import { Delete } from '@element-plus/icons-vue';
 export default {
-  name: "RoleList",
+  name: "ProductList",
   data(){
     return {
       currentPage:1,
@@ -167,38 +166,44 @@ export default {
       },
       addForm:{
         name:'',
+        barCode:'',
+        typeId:'',
+        spec:'',
+        unit:'',
+        description:'',
+        minImageUrl:'',
+        normalImageUrl:'',
+        colSpan:1
       },
       editForm:{
         id:'',
-        name:'',
-        isDeleted:''
+        name:''
       },
       paginationStyle:{
         marginTop:'20px'
       },
       addDialog:false,
       editDialog:false,
-      powerDialog:false,
-      menuTree:[],
-      roleMenuIds:[],
       rules: {
-        name: [{ required: true, message: "请输角色名", trigger: "blur" }]
-      },
-      roleId:null
+        name: [{ required: true, message: "请输商品名称", trigger: "blur" }],
+        barCode: [{ required: true, message: "请输用商品条码", trigger: "blur" }],
+        typeId: [{ required: true, message: "请输用商品类型", trigger: "blur" }],
+        spec: [{ required: true, message: "请输用商品规格", trigger: "blur" }],
+        unit: [{ required: true, message: "请输用商品单位", trigger: "blur" }],
+        colSpan: [{ required: true, message: "请输用商品占位", trigger: "blur" }],
+      }
     }
   },
   created() {
-    this.getRoleList();
-    this.getMenuList();
-    this.getRoleMenu();
+    this.getProductList();
   },
   methods:{
-    getRoleList(){
+    getProductList(){
       const page = {
         page:this.currentPage,
         pageSize:10
       }
-      this.axios.post(this.HttpRequestApi.terminal_roleManage,this.$Qs.stringify(page))
+      this.axios.post(this.HttpRequestApi.terminal_productManage,this.$Qs.stringify(page))
           .then(resp=>{
             if (resp.data.success){
               this.tableData = resp.data.data.list
@@ -207,27 +212,6 @@ export default {
           }).catch(error=>{
         console.log(error)
       })
-    },
-    getMenuList(){
-      this.axios.post(this.HttpRequestApi.terminal_menuManage_treeForLabelID)
-          .then(resp=>{
-            if (resp.data.success){
-              this.menuTree = resp.data.data
-            }
-          }).catch(error=>{
-        console.log(error)
-      })
-    },
-    getRoleMenu(){
-      // this.axios.post(this.HttpRequestApi.terminal_roleManage_roleMenuList,this.$Qs.stringify({roleId:row.id}))
-      //     .then(resp=>{
-      //       if (resp.data.success){
-      //         this.roleMenuIds = resp.data.data
-      //         console.log(this.roleMenuIds)
-      //       }
-      //     }).catch(error=>{
-      //   console.log(error)
-      // })
     },
     rowClass(row) {
       if (row.rowIndex%2 === 0) {
@@ -241,7 +225,7 @@ export default {
         page:page+1,
         pageSize:10
       }
-      this.axios.post(this.HttpRequestApi.terminal_roleManage,this.$Qs.stringify(pager))
+      this.axios.post(this.HttpRequestApi.terminal_productManage,this.$Qs.stringify(pager))
           .then(resp=>{
             if (resp.data.success){
               this.tableData = resp.data.data.list
@@ -256,7 +240,7 @@ export default {
         page:page-1,
         pageSize:10
       }
-      this.axios.post(this.HttpRequestApi.terminal_roleManage,this.$Qs.stringify(pager))
+      this.axios.post(this.HttpRequestApi.terminal_productManage,this.$Qs.stringify(pager))
           .then(resp=>{
             if (resp.data.success){
               this.tableData = resp.data.data.list
@@ -271,7 +255,7 @@ export default {
         page:this.currentPage,
         pageSize:newSize
       }
-      this.axios.post(this.HttpRequestApi.terminal_roleManage,this.$Qs.stringify(pager))
+      this.axios.post(this.HttpRequestApi.terminal_productManage,this.$Qs.stringify(pager))
           .then(resp=>{
             if (resp.data.success){
               this.tableData = resp.data.data.list
@@ -286,7 +270,7 @@ export default {
         page:newPage,
         pageSize:this.pageSize
       }
-      this.axios.post(this.HttpRequestApi.terminal_roleManage,this.$Qs.stringify(pager))
+      this.axios.post(this.HttpRequestApi.terminal_productManage,this.$Qs.stringify(pager))
           .then(resp=>{
             if (resp.data.success){
               this.tableData = resp.data.data.list
@@ -305,7 +289,7 @@ export default {
         start:this.form.start,
         end:this.form.end,
       }
-      this.axios.post(this.HttpRequestApi.terminal_roleManage,this.$Qs.stringify(pager))
+      this.axios.post(this.HttpRequestApi.terminal_productManage,this.$Qs.stringify(pager))
           .then(resp=>{
             if (resp.data.success){
               this.tableData = resp.data.data.list
@@ -320,67 +304,9 @@ export default {
       this.editForm.id = row.id;
       this.editDialog = true;
     },
-    handlePower(index,row){
-      // console.log(index,row);
-      this.axios.post(this.HttpRequestApi.terminal_roleManage_roleMenuList,this.$Qs.stringify({roleId:row.id}))
-          .then(resp=>{
-            if (resp.data.success){
-              this.roleMenuIds = resp.data.data
-              this.roleId = row.id
-            }
-          }).catch(error=>{
-        console.log(error)
-      })
-      this.powerDialog = true;
-    },
-    handleOpen(index,row){
-      this.$messageBox.confirm(
-        '启用角色：'+row.name,
-        '确认启用吗?',{
-          type:'warning',
-          icon:markRaw(Delete),
-          center:true,
-          cancelButtonText:'取消',
-          confirmButtonText:'确认',
-          draggable:true,
-        }).then(()=>{
-        const role = {
-          id:row.id,
-          name:row.name,
-          isDeleted:'N'
-        }
-        this.axios.post(this.HttpRequestApi.terminal_roleManage_update,this.$Qs.stringify(role))
-            .then(resp=>{
-              if (resp.data.success){
-                this.$message({
-                  message: '保存成功',
-                  type: 'success',
-                  center:true,
-                  duration:1500
-                })
-                this.search();
-              } else {
-                this.$message({
-                  message: '保存失败，请重试',
-                  type: 'error',
-                  center:true,
-                  duration:1500
-                })
-              }
-            }).catch(error=>{
-          this.$message({
-            message: '保存失败，请重试',
-            type: 'error',
-            center:true,
-            duration:1500
-          })
-          console.log(error)
-        })
-      })
-    },
     handleDelete(index,row){
       this.$messageBox.confirm(
-          '删除角色：'+row.name,
+          '删除用户：'+row.name,
           '确认删除吗?',
           {
             type:'warning',
@@ -390,7 +316,7 @@ export default {
             confirmButtonText:'确认',
             draggable:true,
           }).then(()=>{
-        this.axios.post(this.HttpRequestApi.terminal_roleManage_del,this.$Qs.stringify({id:row.id}))
+        this.axios.post(this.HttpRequestApi.terminal_productManage_del,this.$Qs.stringify({id:row.id}))
             .then(resp=>{
               if (resp.data.success){
                 this.$message({
@@ -426,7 +352,7 @@ export default {
       if (form.name==''){
         return false;
       }
-      if (form.password==''){
+      if (form.type==''){
         return false;
       }
       if (form.checkPass==''){
@@ -434,14 +360,22 @@ export default {
       }
       return true;
     },
-    addRole(form){
+    addProduct(form){
       this.$refs.addForm.validate((valid)=> {
         if (valid){
-          const adminRole = {
+          const adminProduct = {
             name:form.name,
-            password:form.password
+            type:form.type,
+            barCode:form.barCode,
+            typeId:form.typeId,
+            spec:form.spec,
+            unit:form.unit,
+            description:form.description,
+            minImageUrl:form.minImageUrl,
+            normalImageUrl:form.normalImageUrl,
+            colSpan:form.colSpan
           }
-          this.axios.post(this.HttpRequestApi.terminal_roleManage_add,this.$Qs.stringify(adminRole))
+          this.axios.post(this.HttpRequestApi.terminal_productManage_add,this.$Qs.stringify(adminProduct))
               .then(resp=>{
                 if (resp.data.success){
                   this.$message({
@@ -472,14 +406,14 @@ export default {
         }
       })
     },
-    editRole(form){
+    editProduct(form){
       this.$refs.editForm.validate((valid)=> {
         if (valid){
-          const role = {
+          const adminProduct = {
             id:form.id,
             name:form.name
           }
-          this.axios.post(this.HttpRequestApi.terminal_roleManage_update,this.$Qs.stringify(role))
+          this.axios.post(this.HttpRequestApi.terminal_productManage_update,this.$Qs.stringify(adminProduct))
               .then(resp=>{
                 if (resp.data.success){
                   this.$message({
@@ -513,43 +447,54 @@ export default {
     formReset(){
       this.$refs.form.resetFields()
     },
-    powerDialogClose(){
-        this.roleMenuIds = [];
-    },
-    saveMenu(){
-      if (this.$refs.tree.getCheckedNodes().length<=0){
-        this.$message({
-          message:'请选择菜单',
-          type:'warning',
-          center:true,
-          duration:1500
-        })
-        return false;
-      }
-      const menuIds = this.$refs.tree.getCheckedNodes().map(row=>row.id).join(",");
-      this.axios.post(this.HttpRequestApi.terminal_roleManage_addRoleMenu,
-          this.$Qs.stringify({
-            'roleId': this.roleId,
-            'menuIdStr': menuIds
-          })).then(resp=>{
-        let msg = "保存失败";
-        let isSuccess = 'error';
-        if(resp.data.success){
-          msg = "保存成功";
-          isSuccess='success'
+    handleOpen(index,row){
+      this.$messageBox.confirm(
+          '启用用户：'+row.name,
+          '确认启用吗?',{
+            type:'warning',
+            icon:markRaw(Delete),
+            center:true,
+            cancelButtonText:'取消',
+            confirmButtonText:'确认',
+            draggable:true,
+          }).then(()=>{
+        const product = {
+          id:row.id,
+          isDeleted:'N'
         }
-        this.$message({
-          message:msg,
-          type:isSuccess,
-          center:true,
-          duration:1500
+        this.axios.post(this.HttpRequestApi.terminal_productManage_update,this.$Qs.stringify(product))
+            .then(resp=>{
+              if (resp.data.success){
+                this.$message({
+                  message: '启用成功',
+                  type: 'success',
+                  center:true,
+                  duration:1500
+                })
+                this.search();
+              } else {
+                this.$message({
+                  message: '启用失败，请重试',
+                  type: 'error',
+                  center:true,
+                  duration:1500
+                })
+              }
+            }).catch(error=>{
+          this.$message({
+            message: '启用失败，请重试',
+            type: 'error',
+            center:true,
+            duration:1500
+          })
+          console.log(error)
         })
-        this.powerDialog = false
-      }).catch(error=>{
-        console.log(error)
-        this.powerDialog = false
+      }).catch(()=>{
+        //todo
       })
-      console.log()
+    },
+    closeDiaLog(){
+      this.$refs.addForm.resetFields()
     }
   },
 }

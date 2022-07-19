@@ -1,19 +1,21 @@
 <template>
-  <el-row :justify="'center'" label-width="120px" >
-    <el-form ref="form" :model="form" :rules="rules" @validate="validate" status-icon :label-position="labelPosition" label-width="100px">
-      <el-form-item label="用户名" prop="account">
-        <el-input v-model="form.account" placeholder="请输入用户名" ></el-input>
-      </el-form-item>
-      <el-form-item label="密码" prop="password">
-        <el-input type="password" v-model="form.password" show-password placeholder="请输入密码"></el-input>
-      </el-form-item>
-      <el-form-item>
-        <el-button @click="submit(form)">登录</el-button>
-        <el-button @click="resetForm(form)">Reset</el-button>
-        <el-button type="primary">注册</el-button>
-      </el-form-item>
-    </el-form>
-  </el-row>
+  <div id="building">
+    <el-row :justify="'center'" label-width="120px" >
+      <el-form ref="form" :model="form" :rules="rules" @validate="validate" status-icon :label-position="labelPosition" label-width="100px">
+        <el-form-item label="用户名" prop="account">
+          <el-input v-model="form.account" placeholder="请输入用户名" ></el-input>
+        </el-form-item>
+        <el-form-item label="密码" prop="password">
+          <el-input type="password" v-model="form.password" show-password placeholder="请输入密码"></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-button @click="submit(form)">登录</el-button>
+<!--          <el-button @click="resetForm(form)">Reset</el-button>-->
+<!--          <el-button type="primary">注册</el-button>-->
+        </el-form-item>
+      </el-form>
+    </el-row>
+  </div>
 </template>
 
 <script>
@@ -105,5 +107,15 @@ export default {
 </script>
 
 <style scoped>
-
+#building{
+  background:url("../assets/bg.jpeg");
+  width:100%;
+  height:100%;
+  position:fixed;
+  background-size:100% 100%;
+}
+.el-row{
+  margin-top: 25%;
+  color: #fff;
+}
 </style>

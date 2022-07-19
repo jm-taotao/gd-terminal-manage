@@ -29,9 +29,17 @@ const Index = {
     'terminal_roleManage_detail': '/role/detail',
     'terminal_roleManage_add': '/role/add',
     'terminal_roleManage_addUserRole': '/role/addUserRole',
+    'terminal_roleManage_addRoleMenu': '/role/addRoleMenus',
     'terminal_roleManage_update': '/role/update',
     'terminal_roleManage_del': '/role/del',
     'terminal_roleManage_removeUserRole': '/role/removeUserRole',
+
+    //系统管理->用户管理
+    'terminal_productManage': '/product/list',
+    'terminal_productManage_detail': '/product/detail',
+    'terminal_productManage_add': '/product/add',
+    'terminal_productManage_update': '/product/update',
+    'terminal_productManage_del': '/product/del',
 
 }
 

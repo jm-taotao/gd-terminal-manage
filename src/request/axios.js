@@ -1,4 +1,3 @@
-import Qs from 'qs';
 import axios from 'axios';
 import store from "@/store";
 import {ElMessage} from "element-plus";
@@ -14,9 +13,9 @@ const myAxios = axios.create({
     baseURL: 'http://localhost:8090',
     timeout: 20000,
     headers: {'X-Custom-Header': 'Jyt','Access-Control-Allow-Origin': '*'},
-    paramsSerializer: function(params) {
-        return Qs.stringify(params, {arrayFormat: 'brackets'})
-    },
+    // paramsSerializer: function(params) {
+    //     return Qs.stringify(params, {arrayFormat: 'brackets'})
+    // },
     // `auth` 表示应该使用 HTTP 基础验证，并提供凭据
     // 这将设置一个 `Authorization` 头，覆写掉现有的任意使用 `headers` 设置的自定义 `Authorization`头
     // auth: {

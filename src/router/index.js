@@ -10,68 +10,85 @@ const routes = [
         path: '/index',
         name: 'Index',
         component: () => import(/* webpackChunkName: "about" */ '../views/HomeView'),
-    },
-    {
-        path: '/systemManage',
-        name: 'SystemManage',
-        redirect:'noRedirect',
-        meta: {title: '系统管理'},
-        component: () => import(/* webpackChunkName: "about" */ '../views/HomeView'),
         children: [
             {
-                path: '/dashBoard',
-                name: 'DashBoard',
-                component: () => import(/* webpackChunkName: "about" */ '../views/DashBoard'),
-                meta: {title: 'DashBoard'}
-            },
-            {
-                path: '/system',
-                name: 'System',
-                meta: {title: '系统列表'},
-                component: () => import(/* webpackChunkName: "about" */ '../views/system/system/SystemList')
-            },
-            // {
-            //   path: '/add',
-            //   name: 'add',
-            //   component:() => import(/* webpackChunkName: "about" */ '../views/system/system/SystemList')
-            // },
-            // {
-            //   path: '/update',
-            //   name: 'update',
-            //   component:() => import(/* webpackChunkName: "about" */ '../views/system/system/SystemList')
-            // },
-            {
-                path: '/user',
-                name: 'User',
-                meta: {title: '用户管理'},
-                component: () => import(/* webpackChunkName: "about" */ '../views/system/user/UserList')
-            },
-            {
-                path: '/menu',
-                name: 'Menu',
-                meta: {title: '菜单管理'},
-                component: () => import(/* webpackChunkName: "about" */ '../views/system/menu/MenuList')
-            },
-            {
-                path: '/role',
-                name: 'Role',
-                meta: {title: '角色管理'},
-                component: () => import(/* webpackChunkName: "about" */ '../views/system/role/RoleList')
-            },
-            {
-                path: '/operate',
-                name: 'Operate',
-                meta: {title: '运营商管理'},
-                component: () => import(/* webpackChunkName: "about" */ '../views/system/operate/OperateList')
-            },
-            {
-                path: '/power',
-                name: 'Power',
-                meta: {title: '权限管理'},
-                component: () => import(/* webpackChunkName: "about" */ '../views/system/PowerManage')
+                path: '/systemManage',
+                name: 'SystemManage',
+                redirect:'noRedirect',
+                meta: {title: '系统管理'},
+                children: [
+                    {
+                        path: '/dashBoard',
+                        name: 'DashBoard',
+                        component: () => import(/* webpackChunkName: "about" */ '../views/DashBoard'),
+                        meta: {title: 'DashBoard'}
+                    },
+                    {
+                        path: '/system',
+                        name: 'System',
+                        meta: {title: '系统列表'},
+                        component: () => import(/* webpackChunkName: "about" */ '../views/system/system/SystemList')
+                    },
+                    {
+                        path: '/user',
+                        name: 'User',
+                        meta: {title: '用户管理'},
+                        component: () => import(/* webpackChunkName: "about" */ '../views/system/user/UserList')
+                    },
+                    {
+                        path: '/menu',
+                        name: 'Menu',
+                        meta: {title: '菜单管理'},
+                        component: () => import(/* webpackChunkName: "about" */ '../views/system/menu/MenuList')
+                    },
+                    {
+                        path: '/role',
+                        name: 'Role',
+                        meta: {title: '角色管理'},
+                        component: () => import(/* webpackChunkName: "about" */ '../views/system/role/RoleList')
+                    },
+                    {
+                        path: '/operate',
+                        name: 'Operate',
+                        meta: {title: '运营商管理'},
+                        component: () => import(/* webpackChunkName: "about" */ '../views/system/operate/OperateList')
+                    },
+                    {
+                        path: '/power',
+                        name: 'Power',
+                        meta: {title: '权限管理'},
+                        component: () => import(/* webpackChunkName: "about" */ '../views/system/PowerManage')
+                    },
+                ]
+            },{
+                path: '/productManage',
+                name: 'ProductManage',
+                meta: {title: '商品管理'},
+                children: [
+                    {
+                        path: '/productList',
+                        name: 'ProductList',
+                        meta: {title: '商品列表'},
+                        component: () => import(/* webpackChunkName: "about" */ '../views/product/ProductList')
+                    }
+                ]
             },
         ]
     },
+    // {
+    //     path: '/productManage',
+    //     name: 'ProductManage',
+    //     meta: {title: '商品管理'},
+    //     component: () => import(/* webpackChunkName: "about" */ '../views/HomeView'),
+    //     children: [
+    //         {
+    //             path: '/productList',
+    //             name: 'ProductList',
+    //             meta: {title: '商品列表'},
+    //             component: () => import(/* webpackChunkName: "about" */ '../views/product/ProductList')
+    //         }
+    //     ]
+    // },
     {
         path: '/about',
         name: 'About',
