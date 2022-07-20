@@ -70,6 +70,12 @@ const routes = [
                         name: 'ProductList',
                         meta: {title: '商品列表'},
                         component: () => import(/* webpackChunkName: "about" */ '../views/product/ProductList')
+                    },
+                    {
+                        path: '/productTypeList',
+                        name: 'ProductTypeList',
+                        meta: {title: '商品列表'},
+                        component: () => import(/* webpackChunkName: "about" */ '../views/product/ProductTypeList')
                     }
                 ]
             },

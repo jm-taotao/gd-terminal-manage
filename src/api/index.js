@@ -23,7 +23,7 @@ const Index = {
     'terminal_menuManage_update': '/menu/update',
     'terminal_menuManage_del': '/menu/del',
 
-//系统管理->角色管理
+    //系统管理->角色管理
     'terminal_roleManage': '/role/list',
     'terminal_roleManage_roleMenuList': '/role/roleMenuList',//获取指定角色下的菜单id集合
     'terminal_roleManage_detail': '/role/detail',
@@ -34,12 +34,19 @@ const Index = {
     'terminal_roleManage_del': '/role/del',
     'terminal_roleManage_removeUserRole': '/role/removeUserRole',
 
-    //系统管理->用户管理
+    //商品管理->商品列表
     'terminal_productManage': '/product/list',
     'terminal_productManage_detail': '/product/detail',
     'terminal_productManage_add': '/product/add',
     'terminal_productManage_update': '/product/update',
     'terminal_productManage_del': '/product/del',
+
+    //商品管理->商品列表
+    'terminal_productTypeManage': '/productType/list',
+    'terminal_productTypeManage_detail': '/productType/detail',
+    'terminal_productTypeManage_add': '/productType/add',
+    'terminal_productTypeManage_update': '/productType/update',
+    'terminal_productTypeManage_del': '/productType/del',
 
 }
 

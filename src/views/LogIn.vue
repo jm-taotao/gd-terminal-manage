@@ -1,7 +1,7 @@
 <template>
   <div id="building">
     <el-row :justify="'center'" label-width="120px" >
-      <el-form ref="form" :model="form" :rules="rules" @validate="validate" status-icon :label-position="labelPosition" label-width="100px">
+      <el-form ref="form" :model="form" :rules="rules" @validate="validate" :label-position="labelPosition" label-width="100px">
         <el-form-item label="用户名" prop="account">
           <el-input v-model="form.account" placeholder="请输入用户名" ></el-input>
         </el-form-item>
@@ -29,8 +29,8 @@ export default {
         password:''
       },
       rules: {
-        account: [{ required: true, message: "请输用户名", trigger: "blur" }],
-        password: [{ required: true, message: "请输用密码", trigger: "blur" }],
+        // account: [{ required: true, message: "请输用户名", trigger: "blur" }],
+        // password: [{ required: true, message: "请输用密码", trigger: "blur" }],
       }
     }
   },
