@@ -173,7 +173,7 @@ export default {
   name: "MenuList",
   data(){
     return {
-      defaultExpandAll:false,
+      defaultExpandAll:true,
       refreshTable:true,
       currentPage:1,
       tableData:[],

@@ -74,7 +74,7 @@
       <template #default="scope">
         <el-button size="default" plain type="info" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
         <el-button size="default" plain type="danger" @click="handleDelete(scope.$index, scope.row)" v-if="scope.row.isDeleted==='N'" >删除</el-button>
-        <el-button size="default" plain type="success" @click="handleOpen(scope.$index, scope.row)" v-else >启动</el-button>
+        <el-button size="default" plain type="success" @click="handleOpen(scope.$index, scope.row)" v-else >启用</el-button>
       </template>
     </el-table-column>
   </el-table>
@@ -93,8 +93,8 @@
       v-bind:dataSize="tableData.length"
       :style="paginationStyle"/>
   <!--  新增 -->
-  <el-dialog v-model="addDialog" title="新增信息" width="30%" center :destroy-on-close="true" @close="closeDiaLog">
-        <el-form :model="addForm" ref="addForm" :rules="rules" @validate="validate(addForm)" label-width="100px" :inline="true">
+  <el-dialog v-model="addDialog" title="新增信息" width="50%" center :destroy-on-close="true" @close="closeDiaLog">
+        <el-form :model="addForm" ref="addForm" :rules="rules" @validate="validate(addForm)" label-width="150px" :inline="true">
           <el-form-item label="商品名称" prop="name">
             <el-input type="text" v-model="addForm.name" placeholder="请输入商品名称" />
           </el-form-item>
@@ -102,7 +102,15 @@
             <el-input type="text" v-model="addForm.barCode" placeholder="请输入商品类型"/>
           </el-form-item>
           <el-form-item label="商品类型" prop="typeId">
-            <el-input type="text" v-model="addForm.typeId" placeholder="请输入商品类型"/>
+<!--            <el-input type="text" v-model="addForm.typeId" placeholder="请输入商品类型"/>-->
+            <el-select v-model="addForm.typeId"  placeholder="请选择商品类型">
+              <el-option
+                  v-for="item in productTypeList"
+                  :key="item.id"
+                  :label="item.name"
+                  :value="item.id"
+              />
+            </el-select>
           </el-form-item>
           <el-form-item label="商品规格" prop="spec">
             <el-input type="text" v-model="addForm.spec" placeholder="请输入商品规格"/>
@@ -155,6 +163,7 @@ export default {
     return {
       currentPage:1,
       tableData:[],
+      productTypeList:[],
       pageSize:10,
       pageSizes:[10, 20, 30, 40, 50, 100],
       total:0,
@@ -196,6 +205,7 @@ export default {
   },
   created() {
     this.getProductList();
+    this.getProductTypeList();
   },
   methods:{
     getProductList(){
@@ -208,6 +218,17 @@ export default {
             if (resp.data.success){
               this.tableData = resp.data.data.list
               this.total = resp.data.data.total
+            }
+          }).catch(error=>{
+        console.log(error)
+      })
+    },
+    getProductTypeList(){
+      this.axios.post(this.HttpRequestApi.terminal_productManage_productTypeList)
+          .then(resp=>{
+            if (resp.data.success){
+              this.productTypeList = resp.data.data
+              console.log(this.productTypeList)
             }
           }).catch(error=>{
         console.log(error)

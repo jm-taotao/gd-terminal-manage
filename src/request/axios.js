@@ -43,7 +43,7 @@ myAxios.interceptors.request.use(function (config) {
             return false;
         }
     }
-    config.headers.token=store.state.token;
+    config.headers.token=token;
     // 在发送请求之前做些什么
     return config;
 }, function (error) {
@@ -56,6 +56,12 @@ myAxios.interceptors.request.use(function (config) {
 myAxios.interceptors.response.use(function (response) {
     // 对响应数据做点什么
     if ("10010" === response.data.code){
+        ElMessage({
+            message: '登录失效,请重新登录',
+            type: 'warning',
+            center:true,
+            duration:1500
+        })
         router.push("/login")
     }
     if (response.status === 200){
@@ -66,33 +72,33 @@ myAxios.interceptors.response.use(function (response) {
 }, function (error) {
     // console.log("response = " + error)
     // 对响应错误做点什么
-    // if (error.response.status) {
-    //     switch (error.response.status) {
-    //         // 401: 未登录
-    //         // 未登录则跳转登录页面，并携带当前页面的路径
-    //         // 在登录成功后返回当前页面，这一步需要在登录页操作。
-    //         case 401:
-    //             router.push('/login').then(v=>{
-    //                 console.log(v)
-    //             });
-    //             break;
-    //         // 403 token过期 1.登录过期对用户进行提示 2.清除本地token和清空vuex中token对象 3.跳转登录页面
-    //         case 403:
-    //             sessionStorage.removeItem("token");
-    //             store.commit('initLoginUser',null);
-    //             ElMessage({
-    //                 message: '登录已过期',
-    //                 type: 'warning',
-    //                 center:true,
-    //                 duration:2000
-    //             })
-    //             setTimeout(() => {
-    //                 router.push('/login');
-    //             }, 1000);
-    //             break;
-    //         default:
-    //     }
-    // }
+    if (error.response.status) {
+        switch (error.response.status) {
+            // 401: 未登录
+            // 未登录则跳转登录页面，并携带当前页面的路径
+            // 在登录成功后返回当前页面，这一步需要在登录页操作。
+            case 401:
+                router.push('/login').then(v=>{
+                    console.log(v)
+                });
+                break;
+            // 403 token过期 1.登录过期对用户进行提示 2.清除本地token和清空vuex中token对象 3.跳转登录页面
+            case 403:
+                sessionStorage.removeItem("token");
+                store.commit('initToken',null);
+                ElMessage({
+                    message: '登录已过期',
+                    type: 'warning',
+                    center:true,
+                    duration:2000
+                })
+                setTimeout(() => {
+                    router.push('/login');
+                }, 1000);
+                break;
+            default:
+        }
+    }
     return Promise.reject(error);
 });
 

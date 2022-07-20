@@ -69,7 +69,7 @@
       <template #default="scope">
         <el-button size="default" plain type="info" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
         <el-button size="default" plain type="danger" @click="handleDelete(scope.$index, scope.row)" v-if="scope.row.isDeleted==='N'" >删除</el-button>
-        <el-button size="default" plain type="success" @click="handleOpen(scope.$index, scope.row)" v-else >启动</el-button>
+        <el-button size="default" plain type="success" @click="handleOpen(scope.$index, scope.row)" v-else >启用</el-button>
       </template>
     </el-table-column>
   </el-table>

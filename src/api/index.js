@@ -36,6 +36,7 @@ const Index = {
 
     //商品管理->商品列表
     'terminal_productManage': '/product/list',
+    'terminal_productManage_productTypeList': '/product/productTypeList',
     'terminal_productManage_detail': '/product/detail',
     'terminal_productManage_add': '/product/add',
     'terminal_productManage_update': '/product/update',
